@@ -76,7 +76,7 @@ Gather the pieces for the left and right side into separate groups.
 - Rear Leg
 - Front Leg
 
-![](01 - Side Panel Assembly - 01.png)
+![](01\ -\ Side Panel Assembly\ -\ 01.png)
 ### Step 1) Mesh Panel & Side Rail
 
 Attach the side net / mesh panel and the side railing to the side panel using glue.
