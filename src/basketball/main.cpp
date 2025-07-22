@@ -14,7 +14,7 @@ const int dataPin = 8;
 const int startButtonPin = 5;
 const int ballDectectorPin = 4;
 
-const int gameLengthSeconds = 5;
+const int gameLengthSeconds = 60;
 
 // EEPROM addresses
 const int EEPROM_HIGH_SCORE_ADDR = 0;
