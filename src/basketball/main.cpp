@@ -14,7 +14,7 @@ const int dataPin = 8;
 const int startButtonPin = 5;
 const int ballDectectorPin = 4;
 
-const int gameLengthSeconds = 90;
+const int gameLengthSeconds = 5;
 
 // EEPROM addresses
 const int EEPROM_HIGH_SCORE_ADDR = 0;
@@ -228,13 +228,14 @@ void transitionStateToPlaying() {
     lc->setChar(0, scoreDigits[i], '-', false);
   }
 
-  // Count down from 3 to 0 on the time remaining display to indicate game start
+  // Count down from 3 to 1 on the time remaining display to indicate game start
   lc->setChar(0, timeRemainingDigits[0], ' ', false);
-  for (int i = 0; i <= 3; i++) {
-    lc->setChar(0, timeRemainingDigits[1], '0' + (3-i), false);
+  for (int i = 3; i >= 1; i--) {
+    lc->setChar(0, timeRemainingDigits[1], '0' + i, false);
     delay(1000);
   }
   lc->setChar(0, timeRemainingDigits[1], ' ', false);
+  
   delay(250);
 
   gameEndTime = millis() + gameLengthMillis;  

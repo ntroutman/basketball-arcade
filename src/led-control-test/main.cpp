@@ -15,6 +15,7 @@ void updateTimer();
 void numberDigits();
 void turnOnAllSegments();
 void sequenceDPs();
+void sequenceSegements();
 
 LedControl* lc;
 
@@ -45,9 +46,37 @@ void loop() {
   //   digitalWrite(13, HIGH); // Turn off onboard LED when button is not pressed
   // }
   //updateCounter();
-  numberDigits();
+  //numberDigits();
   //turnOnAllSegments();
-  sequenceDPs();
+  //sequenceDPs();
+  sequenceSegements();
+}
+
+void sequenceSegements() {
+  // 0b01111101
+  for (int digit = 0; digit < 8; digit++) {
+    lc->setChar(0, digit, '0' + digit, false);
+  }
+  delay(500); // Delay to see the effect
+
+
+  for (int i = 0; i < 8; i++) {
+    byte bits = 1 << i; // Shift left to make space for the new bit
+    lc->setRow(0, i, bits);
+  }
+  delay(500); // Delay to see the effect
+}
+
+void debugLetters() {
+  const byte gameOverChars[] = {
+  0b01111101, // G
+  0b01110111, // A
+  0b00010101, // M (approximation - looks like "n")
+  0b01111001, // E
+  0b01011111, // O
+  0b01111110, // V (approximation)
+  0b01010000  // R (approximation)
+};
 }
 
 void numberDigits() {
