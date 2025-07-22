@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <LedControl.h>
 #include <OneButton.h>
+#include <EEPROM.h>
 
 #include "basketball/GameOverAnimation.h"
 
@@ -14,6 +15,11 @@ const int startButtonPin = 5;
 const int ballDectectorPin = 4;
 
 const int gameLengthSeconds = 15;
+
+// EEPROM addresses
+const int EEPROM_HIGH_SCORE_ADDR = 0;
+const int EEPROM_MAGIC_NUMBER_ADDR = 4;
+const int EEPROM_MAGIC_NUMBER = 0xBA5E;  // "BASE" in hex - magic number to verify EEPROM data validity
 
 // Digits from least significant to most significant.
 // 3-Digit 7-Segment Display goes from left (Dig 1) to right (Dig 3)
@@ -43,6 +49,8 @@ void gameloop_gameover();
 void gameloop_sleeping();
 
 void loadHighScore();
+void saveHighscore(int newHighScore);
+void resetHighScore();
 void startButtonPressed();
 void scoreSensorTriggered();
 
@@ -103,16 +111,47 @@ void initLedControl() {
 }
 
 void loadHighScore() {
-  highScore = 42;  // TODO Replace with actual EEPROM read logic if needed
-
-  Serial.print("Loaded High Score: ");
-  Serial.println(highScore);
+  // Check if EEPROM has been initialized with valid data
+  int magicNumber;
+  EEPROM.get(EEPROM_MAGIC_NUMBER_ADDR, magicNumber);
+  
+  if (magicNumber == EEPROM_MAGIC_NUMBER) {
+    // EEPROM has valid data, load the high score
+    EEPROM.get(EEPROM_HIGH_SCORE_ADDR, highScore);
+    Serial.print("Loaded High Score from EEPROM: ");
+    Serial.println(highScore);
+  } else {
+    // EEPROM not initialized or corrupted, set default high score
+    highScore = 0;
+    Serial.println("EEPROM not initialized. Setting default high score to 0.");
+    
+    // Initialize EEPROM with default values
+    EEPROM.put(EEPROM_HIGH_SCORE_ADDR, highScore);
+    EEPROM.put(EEPROM_MAGIC_NUMBER_ADDR, EEPROM_MAGIC_NUMBER);
+    Serial.println("EEPROM initialized with default values.");
+  }
 }
 
 void saveHighscore(int newHighScore) {
-  // TODO Save highscore to EEPROM
-  Serial.print("Saving High Score: ");
-  Serial.println(newHighScore);
+  highScore = newHighScore;
+  
+  // Save the new high score to EEPROM
+  EEPROM.put(EEPROM_HIGH_SCORE_ADDR, highScore);
+  
+  // Ensure magic number is still valid (in case this is the first save)
+  EEPROM.put(EEPROM_MAGIC_NUMBER_ADDR, EEPROM_MAGIC_NUMBER);
+  
+  Serial.print("High Score saved to EEPROM: ");
+  Serial.println(highScore);
+}
+
+void resetHighScore() {
+  // Reset high score to 0 and save to EEPROM
+  highScore = 0;
+  EEPROM.put(EEPROM_HIGH_SCORE_ADDR, highScore);
+  EEPROM.put(EEPROM_MAGIC_NUMBER_ADDR, EEPROM_MAGIC_NUMBER);
+  
+  Serial.println("High Score reset to 0 and saved to EEPROM.");
 }
 
 unsigned long timeOfNextDebug = 1000;
