@@ -14,7 +14,7 @@ const int dataPin = 8;
 const int startButtonPin = 5;
 const int ballDectectorPin = 4;
 
-const int gameLengthSeconds = 15;
+const int gameLengthSeconds = 90;
 
 // EEPROM addresses
 const int EEPROM_HIGH_SCORE_ADDR = 0;
@@ -83,7 +83,7 @@ void setup() {
   // Initialize score button (IR sensor)
   scoreButton.setup(ballDectectorPin, INPUT_PULLUP, true);
   scoreButton.attachPress(scoreSensorTriggered);
-  scoreButton.setDebounceMs(10);
+  scoreButton.setDebounceMs(5);
 
   // Load high score from EEPROM or set to 0 if not available
   loadHighScore();
